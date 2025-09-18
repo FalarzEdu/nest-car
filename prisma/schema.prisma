@@ -16,6 +16,7 @@ datasource db {
 model Car {
   id  Int @id @default(autoincrement())
   model String
+  make String
   year Int
   colour String
   status carStatus

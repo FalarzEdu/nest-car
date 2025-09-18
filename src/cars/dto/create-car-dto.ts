@@ -18,5 +18,5 @@ export class CreateCarDto {
 
   @IsString({ message: "O status deve ser uma string." })
   @IsEnum(carStatus)
-  status: string;
+  status: carStatus;
 }

@@ -1,65 +1,51 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Car } from "./interface/car";
-import { carStatus } from "./enum/carStatus.enum";
+import { PrismaService } from "../prisma/prisma.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class CarsService {
-  private cars: Array<Car> = [
-    {
-      model: "Astra Sedan Advantage",
-      make: "Chevrolet",
-      year: 2007,
-      colour: "Preto",
-      status: carStatus.AVAILABLE,
-      id: 1,
-    },
-    {
-      model: "Ford KA",
-      make: "Ford",
-      year: 2018,
-      colour: "Cinza",
-      status: carStatus.SOLD,
-      id: 2,
-    },
-    {
-      model: "Voyage 1.6 MPFI",
-      make: "Volkswagen",
-      year: 2022,
-      colour: "Preto",
-      status: carStatus.SOLD,
-      id: 3,
-    },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  create(car: any): void {
-    car.id = this.cars[this.cars.length - 1].id + 1;
-    this.cars.push(car);
+  async create(car: Prisma.CarCreateInput) {
+    return this.prisma.car.create({ data: car });
   }
 
-  findAll(filter?: string, page: number = 1) {
-    let result = this.cars;
-
+  async findAll(filter?: string, page: number = 1) {
+    const pageSize: number = 5;
     if (filter) {
-      result = result.filter((car) => {
-        return car.model.toLowerCase().includes(filter.toLowerCase());
+      return this.prisma.car.findMany({
+        where: {
+          model: filter,
+        },
+        skip: (page - 1) * pageSize,
+        take: page * pageSize,
       });
     }
-
-    const pageSize = 5;
-    return result.slice((page - 1) * pageSize, page * pageSize);
+    return this.prisma.car.findMany({
+      skip: (page - 1) * pageSize,
+      take: page * pageSize,
+    });
   }
 
-  findOne(id: number) {
-    const car: Car | undefined = this.cars.find((car) => car.id === id);
-    if (!car) throw new NotFoundException("Carro não encontrado.");
-    return car;
+  async findOne(id: number) {
+    return this.prisma.car.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(id: number, car: Car): void {
-    this.cars[id - 1] = car;
+  async update(id: number, car: Car) {
+    return this.prisma.car.update({
+      where: {
+        id: id,
+      },
+      data: car,
+    });
   }
 
-  remove(id: number) {
-    this.cars = this.cars.filter((car) => car.id != id);
+  async remove(id: number) {
+    await this.prisma.car.delete({ where: { id: id } });
   }
 }

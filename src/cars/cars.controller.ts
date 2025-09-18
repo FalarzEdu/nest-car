@@ -7,17 +7,20 @@ import {
   Param,
   Patch,
   Post,
-  Put, Query, UseFilters, UseInterceptors,
+  Put,
+  Query,
+  UseFilters,
+  UseInterceptors,
 } from "@nestjs/common";
 import { CarsService } from "./cars.service";
-import {CreateCarDto} from "./dto/create-car-dto";
-import {QueryFilterDto} from "./dto/query-filter-dto";
-import {ResponseInterceptor} from "../response/response.interceptor";
-import {CustomExceptionFilter} from "../custom-exception/custom-exception.filter";
+import { CreateCarDto } from "./dto/create-car-dto";
+import { QueryFilterDto } from "./dto/query-filter-dto";
+import { ResponseInterceptor } from "../response/response.interceptor";
+import { CustomExceptionFilter } from "../custom-exception/custom-exception.filter";
 
 @Controller("cars")
 @UseInterceptors(ResponseInterceptor)
-// @UseFilters(CustomExceptionFilter)
+@UseFilters(CustomExceptionFilter)
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 

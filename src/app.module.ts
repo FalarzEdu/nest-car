@@ -6,9 +6,10 @@ import { CoreModule } from "./core/core.module";
 import { CarsModule } from "./cars/cars.module";
 import { AuthMiddleware } from "./auth/auth.middleware";
 import { PrismaModule } from "./prisma/prisma.module";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [SharedModule, CoreModule, CarsModule, PrismaModule],
+  imports: [SharedModule, CoreModule, CarsModule, PrismaModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

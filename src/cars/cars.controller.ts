@@ -9,7 +9,7 @@ import {
   Post,
   Put,
   Query,
-  UseFilters,
+  UseFilters, UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { CarsService } from "./cars.service";
@@ -17,10 +17,12 @@ import { CreateCarDto } from "./dto/create-car-dto";
 import { QueryFilterDto } from "./dto/query-filter-dto";
 import { ResponseInterceptor } from "../response/response.interceptor";
 import { CustomExceptionFilter } from "../custom-exception/custom-exception.filter";
+import {JwtAuthGuard} from "../auth/jwt-auth-guard";
 
 @Controller("cars")
 @UseInterceptors(ResponseInterceptor)
 @UseFilters(CustomExceptionFilter)
+@UseGuards(JwtAuthGuard)
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 

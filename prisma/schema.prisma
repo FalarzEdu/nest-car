@@ -32,4 +32,10 @@ model User {
   email    String @unique
   password String
   name     String?
+  roles    Role @default(user)
+}
+
+enum Role {
+  user
+  admin
 }

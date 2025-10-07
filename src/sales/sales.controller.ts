@@ -16,15 +16,15 @@ import { JwtAuthGuard } from "../auth/jwt-auth-guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { CreateCarDto } from "../cars/dto/create-car-dto";
 import { Sale } from "@prisma/client";
-import {CreateSaleDto} from "./DTO/createSaleDto";
+import { CreateSaleDto } from "./DTO/createSaleDto";
 
 @Controller("sales")
 @UseInterceptors(ResponseInterceptor)
 @UseFilters(CustomExceptionFilter)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class SalesController {
+
   constructor(private readonly salesService: SalesService) {}
 
   @Version("1")
@@ -33,45 +33,14 @@ export class SalesController {
   @HttpCode(200)
   // Documentação da Operação
   @ApiOperation({
-    summary: "Criar um novo registro de carro",
+    summary: "Recuperar o histórico completo de vendas",
     description:
-      'Endpoint para criar um novo carro na base de dados. Acesso restrito a usuários com perfil de "admin".',
-  })
-  @ApiBody({
-    type: CreateCarDto,
-    description: "Dados para a criação de um novo carro.",
-    examples: {
-      validRequest: {
-        summary: "Exemplo de requisição válida",
-        value: {
-          make: "Toyota",
-          model: "Corolla",
-          year: 2023,
-          colour: "black",
-          status: "available",
-        },
-      },
-      invalidRequest: {
-        summary: "Exemplo de requisição inválida",
-        description: 'Falta o campo obrigatório "model".',
-        value: {
-          make: "Toyota",
-          year: 2023,
-          colour: "black",
-          status: "available",
-        },
-      },
-    },
+      'Endpoint para listar todos os registros de vendas feitos no sistema. Retorna uma lista de objetos de venda, cada um com detalhes do carro associado. Acesso restrito a usuários com perfil de "admin".',
   })
   // Documentação das Respostas da API
   @ApiResponse({
-    status: 201,
-    description: "O carro foi criado com sucesso.",
-  })
-  @ApiResponse({
-    status: 400,
-    description:
-      "Bad Request: Os dados fornecidos são inválidos ou faltam campos obrigatórios.",
+    status: 200,
+    description: "O histórico de vendas foi recuperado com sucesso.",
   })
   @ApiResponse({
     status: 401,
@@ -82,14 +51,6 @@ export class SalesController {
     status: 403,
     description:
       'Forbidden: O usuário não tem permissão para executar esta ação (requer perfil "admin").',
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Not Found: Algum recurso relacionado não foi encontrado.",
-  })
-  @ApiResponse({
-    status: 409,
-    description: "Conflict: Já existe um carro com a mesma placa.",
   })
   @ApiResponse({
     status: 500,
@@ -106,32 +67,35 @@ export class SalesController {
   @HttpCode(201)
   // Documentação da Operação
   @ApiOperation({
-    summary: "Criar um novo registro de carro",
+    summary: "Registrar uma nova venda de carro",
     description:
-      'Endpoint para criar um novo carro na base de dados. Acesso restrito a usuários com perfil de "admin".',
+      'Endpoint para criar um novo registro de venda. Este processo associa a venda a um carro existente e atualiza o status do carro para "VENDIDO". Acesso restrito a usuários com perfil de "admin".',
   })
+  // Documentação do Corpo da Requisição
   @ApiBody({
-    type: CreateCarDto,
-    description: "Dados para a criação de um novo carro.",
+    type: CreateSaleDto,
+    description: "Dados necessários para registrar uma nova venda.",
     examples: {
       validRequest: {
         summary: "Exemplo de requisição válida",
         value: {
-          make: "Toyota",
-          model: "Corolla",
-          year: 2023,
-          colour: "black",
-          status: "available",
+          carId: 1,
+          price: 79500.5,
         },
       },
-      invalidRequest: {
-        summary: "Exemplo de requisição inválida",
-        description: 'Falta o campo obrigatório "model".',
+      invalidRequest_missingField: {
+        summary: "Exemplo de requisição inválida (campo faltando)",
+        description: 'Falta o campo obrigatório "carId".',
         value: {
-          make: "Toyota",
-          year: 2023,
-          colour: "black",
-          status: "available",
+          price: 79500.5,
+        },
+      },
+      invalidRequest_notFound: {
+        summary: "Exemplo de requisição inválida (carro não existe)",
+        description: "O `carId` 999 não corresponde a um carro disponível.",
+        value: {
+          carId: 999,
+          price: 79500.5,
         },
       },
     },
@@ -139,12 +103,12 @@ export class SalesController {
   // Documentação das Respostas da API
   @ApiResponse({
     status: 201,
-    description: "O carro foi criado com sucesso.",
+    description: "A venda foi registrada com sucesso.",
   })
   @ApiResponse({
     status: 400,
     description:
-      "Bad Request: Os dados fornecidos são inválidos ou faltam campos obrigatórios.",
+      "Bad Request: Os dados fornecidos são inválidos ou faltam campos obrigatórios (ex: carId, price).",
   })
   @ApiResponse({
     status: 401,
@@ -158,11 +122,12 @@ export class SalesController {
   })
   @ApiResponse({
     status: 404,
-    description: "Not Found: Algum recurso relacionado não foi encontrado.",
+    description:
+      "Not Found: O carro com o ID fornecido não foi encontrado ou não está disponível para venda.",
   })
   @ApiResponse({
     status: 409,
-    description: "Conflict: Já existe um carro com a mesma placa.",
+    description: "Conflict: O carro especificado já foi vendido.",
   })
   @ApiResponse({
     status: 500,

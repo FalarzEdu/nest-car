@@ -1,7 +1,7 @@
-import {IsEnum, IsInt, IsNotEmpty, IsString} from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsString } from "class-validator";
 import { Type } from "class-transformer";
 import { carStatus } from "../enum/carStatus.enum";
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateCarDto {
   @ApiProperty({ example: "Astra" })

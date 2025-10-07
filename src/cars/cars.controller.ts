@@ -29,13 +29,11 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { carStatus } from "./enum/carStatus.enum";
 
 @ApiTags("Cars")
 @ApiBearerAuth()
 @Controller("cars")
 @UseInterceptors(ResponseInterceptor)
-@UseFilters(CustomExceptionFilter)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
@@ -135,7 +133,7 @@ export class CarsController {
   @Get(":id")
   @HttpCode(200)
   findOne(@Param("id") id: number) {
-    console.log("CALLED!")
+    console.log("CALLED!");
     return this.carsService.findOne(Number(id));
   }
 
@@ -148,21 +146,6 @@ export class CarsController {
   @HttpCode(200)
   updateWhole(@Param("id") id: number, @Body() updateItem: any) {
     return this.carsService.wholeCarUpdate(id, updateItem);
-  }
-
-  @ApiOperation({ summary: "Altera parcialmente um carro no banco de dados." })
-  @ApiResponse({ status: 200, description: "Carro alterado." })
-  @ApiResponse({ status: 403, description: "Não autorizado." })
-  @ApiResponse({ status: 422, description: "Dados inválidos." })
-  @Roles("admin")
-  @Patch("/status/:id")
-  @HttpCode(200)
-  updateStatus(@Param("id") id: number, @Body() status: carStatus) {
-    return this.carsService.partialCarUpdate(
-      Number(id),
-      "status",
-      status["status"],
-    );
   }
 
   @ApiOperation({ summary: "Deleta um carro do banco de dados." })

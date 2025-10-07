@@ -12,6 +12,7 @@ import {
   UseFilters,
   UseGuards,
   UseInterceptors,
+  Version,
 } from "@nestjs/common";
 import { CarsService } from "./cars.service";
 import { CreateCarDto } from "./dto/create-car-dto";
@@ -28,6 +29,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { carStatus } from "./enum/carStatus.enum";
 
 @ApiTags("Cars")
 @ApiBearerAuth()
@@ -38,6 +40,7 @@ import {
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
 
+  @Version("1")
   @Roles("admin")
   @Post()
   @HttpCode(201)
@@ -47,13 +50,6 @@ export class CarsController {
     description:
       'Endpoint para criar um novo carro na base de dados. Acesso restrito a usuários com perfil de "admin".',
   })
-  // id  Int @id @default(autoincrement())
-  // model String
-  // make String
-  // year Int
-  // colour String
-  // status carStatus
-  // Documentação do Corpo da Requisição (Payload)
   @ApiBody({
     type: CreateCarDto,
     description: "Dados para a criação de um novo carro.",
@@ -113,17 +109,25 @@ export class CarsController {
     description:
       "Internal Server Error: Ocorreu um erro inesperado no servidor.",
   })
-  create(@Body() createCar: CreateCarDto) {
+  createV1(@Body() createCar: CreateCarDto) {
     return this.carsService.create(createCar);
   }
 
   @ApiOperation({ summary: "Recupera todos os carros no banco de dados." })
   @ApiResponse({ status: 200, description: "Carros recuperados." })
-  @Roles("user")
+  @Roles("user", "admin")
   @Get()
   @HttpCode(200)
   findAll(@Query() queryFilter: QueryFilterDto) {
     return this.carsService.findAll(queryFilter.filter, queryFilter.page);
+  }
+
+  @ApiOperation({ summary: "Recupera os carros à venda." })
+  @ApiResponse({ status: 200, description: "Carros recuperados." })
+  @Get("/available")
+  @HttpCode(200)
+  findAllAvailable() {
+    return this.carsService.findAllAvailable();
   }
 
   @ApiOperation({ summary: "Recupera um carro pelo ID no banco de dados." })
@@ -131,7 +135,8 @@ export class CarsController {
   @Get(":id")
   @HttpCode(200)
   findOne(@Param("id") id: number) {
-    return this.carsService.findOne(+id);
+    console.log("CALLED!")
+    return this.carsService.findOne(Number(id));
   }
 
   @ApiOperation({ summary: "Altera completamente um carro no banco de dados." })
@@ -141,8 +146,8 @@ export class CarsController {
   @Roles("admin")
   @Put(":id")
   @HttpCode(200)
-  update(@Param("id") id: number, @Body() updateItem: any) {
-    return this.carsService.update(id, updateItem);
+  updateWhole(@Param("id") id: number, @Body() updateItem: any) {
+    return this.carsService.wholeCarUpdate(id, updateItem);
   }
 
   @ApiOperation({ summary: "Altera parcialmente um carro no banco de dados." })
@@ -150,10 +155,14 @@ export class CarsController {
   @ApiResponse({ status: 403, description: "Não autorizado." })
   @ApiResponse({ status: 422, description: "Dados inválidos." })
   @Roles("admin")
-  @Patch(":id")
+  @Patch("/status/:id")
   @HttpCode(200)
-  partialUpdate(@Param("id") id: number, @Body() updateItem: any) {
-    return this.carsService.update(id, updateItem);
+  updateStatus(@Param("id") id: number, @Body() status: carStatus) {
+    return this.carsService.partialCarUpdate(
+      Number(id),
+      "status",
+      status["status"],
+    );
   }
 
   @ApiOperation({ summary: "Deleta um carro do banco de dados." })

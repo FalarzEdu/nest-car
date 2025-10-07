@@ -36,12 +36,36 @@ export class CarsService {
     });
   }
 
-  async update(id: number, car: Car) {
+  async findAllAvailable() {
+    return this.prisma.car.findMany({
+      where: {
+        status: "available",
+      },
+    });
+  }
+
+  async wholeCarUpdate(id: number, car: Car) {
     return this.prisma.car.update({
       where: {
         id: id,
       },
       data: car,
+    });
+  }
+
+  async partialCarUpdate<K extends keyof Car>(
+    id: number,
+    property: K,
+    value: Car[K],
+  ) {
+    console.log(value);
+    return this.prisma.car.update({
+      where: {
+        id: id,
+      },
+      data: {
+        [property]: value,
+      },
     });
   }
 

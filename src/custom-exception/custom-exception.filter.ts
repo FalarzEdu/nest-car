@@ -14,7 +14,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      message: exception.message || 'Erro interno no servidor',
+      message: exception.message || "Erro interno no servidor",
       timestamp: new Date().toISOString(),
     });
   }

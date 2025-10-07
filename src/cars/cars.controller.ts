@@ -135,7 +135,7 @@ export class CarsController {
   @Get(":id")
   @HttpCode(200)
   findOne(@Param("id") id: number) {
-    console.log("CALLED!")
+    console.log("CALLED!");
     return this.carsService.findOne(Number(id));
   }
 

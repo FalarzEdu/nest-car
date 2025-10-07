@@ -1,7 +1,7 @@
-import { ResponseInterceptor } from './response.interceptor';
+import { ResponseInterceptor } from "./response.interceptor";
 
-describe('ResponseInterceptor', () => {
-  it('should be defined', () => {
+describe("ResponseInterceptor", () => {
+  it("should be defined", () => {
     expect(new ResponseInterceptor()).toBeDefined();
   });
 });

@@ -1,4 +1,4 @@
-import {carStatus} from "../enum/carStatus.enum";
+import { carStatus } from "../enum/carStatus.enum";
 
 export interface Car {
   id: number;

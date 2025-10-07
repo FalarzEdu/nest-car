@@ -2,10 +2,10 @@ import { IsNumber, IsPositive } from "class-validator";
 
 export class CreateSaleDto {
   @IsNumber()
-  @IsPositive()
+  @IsPositive({ message: "O ID deve ser positivo." })
   carId: number;
 
   @IsNumber()
-  @IsPositive()
+  @IsPositive({ message: "O preço deve ser positivo." })
   price: number;
 }

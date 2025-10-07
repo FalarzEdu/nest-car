@@ -29,13 +29,11 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { carStatus } from "./enum/carStatus.enum";
 
 @ApiTags("Cars")
 @ApiBearerAuth()
 @Controller("cars")
 @UseInterceptors(ResponseInterceptor)
-@UseFilters(CustomExceptionFilter)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}

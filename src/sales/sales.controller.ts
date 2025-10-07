@@ -21,10 +21,8 @@ import { CreateSaleDto } from "./DTO/createSaleDto";
 
 @Controller("sales")
 @UseInterceptors(ResponseInterceptor)
-@UseFilters(CustomExceptionFilter)
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class SalesController {
-
   constructor(private readonly salesService: SalesService) {}
 
   @Version("1")

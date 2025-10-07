@@ -150,21 +150,6 @@ export class CarsController {
     return this.carsService.wholeCarUpdate(id, updateItem);
   }
 
-  @ApiOperation({ summary: "Altera parcialmente um carro no banco de dados." })
-  @ApiResponse({ status: 200, description: "Carro alterado." })
-  @ApiResponse({ status: 403, description: "Não autorizado." })
-  @ApiResponse({ status: 422, description: "Dados inválidos." })
-  @Roles("admin")
-  @Patch("/status/:id")
-  @HttpCode(200)
-  updateStatus(@Param("id") id: number, @Body() status: carStatus) {
-    return this.carsService.partialCarUpdate(
-      Number(id),
-      "status",
-      status["status"],
-    );
-  }
-
   @ApiOperation({ summary: "Deleta um carro do banco de dados." })
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: "Carro deletado." })

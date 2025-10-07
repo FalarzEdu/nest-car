@@ -9,6 +9,43 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Car {
+  id        Int @id @default(autoincrement())
+  model     String
+  make      String
+  year      Int
+  colour    String
+  status    carStatus
+  sale      Sale?
+}
+
+enum carStatus {
+  available
+  sold
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String?
+  roles    Role @default(user)
+}
+
+enum Role {
+  user
+  admin
+}
+
+model Sale {
+  id      Int     @id @default(autoincrement())
+  car_id  Int     @unique
+  price   Float
+  date    DateTime
+
+  car     Car     @relation(fields: [car_id], references: [id])
 }

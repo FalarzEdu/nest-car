@@ -1,7 +1,7 @@
-import { CustomExceptionFilter } from './custom-exception.filter';
+import { CustomExceptionFilter } from "./custom-exception.filter";
 
-describe('CustomExceptionFilter', () => {
-  it('should be defined', () => {
+describe("CustomExceptionFilter", () => {
+  it("should be defined", () => {
     expect(new CustomExceptionFilter()).toBeDefined();
   });
 });

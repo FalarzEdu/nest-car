@@ -2,6 +2,7 @@ import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { LoginDto } from "./dto/login.dto";
+import {Role} from "@prisma/client";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -19,8 +20,14 @@ export class AuthController {
     @Body("email") email: string,
     @Body("password") password: string,
     @Body("name") name?: string,
+    @Body("role") role?: Role,
   ) {
-    const newUser = await this.authService.register(email, password, name);
+    const newUser = await this.authService.register(
+      email,
+      password,
+      name,
+      role,
+    );
     return newUser;
   }
 

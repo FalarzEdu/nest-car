@@ -1,3 +1,67 @@
+# NestCar
+
+## Autor 
+Eduardo Falarz
+
+## Descrição
+NestCar é uma API simples construída com o framework NestJS cujo propósito principal é servir como um gerenciador
+para revendas de carros.
+Suas principais funcionaliades são:
+
+- Registrar carros para venda;
+- Registrar venda de um carro;
+- Listar os carros disponíveis;
+- Listar histórico de vendas
+
+## Link para a API em produção:
+https://nest-car-api.onrender.com
+
+## Como executar
+
+### O que será necessário
+- Node v22.16.0
+- Docker
+- NPM (v10.9.2)
+
+### Comandos
+Instalar todas as dependências
+```
+npm install
+```
+
+Criar o arquivo `.env`
+```
+cp .env.example .env
+```
+
+Agora, preencha o arquivo com os dados solicitados.
+
+Subir o banco de dados
+```
+docker compose up
+```
+
+Executar o projeto em modo de desenvolvimento
+```
+npm run start:dev
+```
+
+## Diagramas de Entidade-Relacionamento
+
+https://dbdiagram.io/d/68e6e048d2b621e422f19cc8
+
+## Documentação Swagger
+A documentação gerada é acessível localmente e pela endereço de deploy. São eles:
+
+### Deploy
+`nest-car-api.onrender.com/api`
+
+### Local
+`{HOST_LOCAL}/api`
+
+#### Exemplo:
+`localhost:3000/api`
+
 ## Requisitos Avaliativos (RA) e Itens de Desempenho (ID)
 
 #### RA1 - Projetar e desenvolver uma API funcional utilizando o framework NestJS.

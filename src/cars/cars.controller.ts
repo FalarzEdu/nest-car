@@ -130,11 +130,20 @@ export class CarsController {
 
   @ApiOperation({ summary: "Recupera um carro pelo ID no banco de dados." })
   @ApiResponse({ status: 200, description: "Carro recuperado." })
+  @Version("1")
   @Get(":id")
   @HttpCode(200)
-  findOne(@Param("id") id: number) {
-    console.log("CALLED!");
+  findOneV1(@Param("id") id: number) {
     return this.carsService.findOne(Number(id));
+  }
+
+  @ApiOperation({ summary: "Recupera um carro pelo ID no banco de dados." })
+  @ApiResponse({ status: 200, description: "Carro recuperado." })
+  @Version("2")
+  @Get(":id")
+  @HttpCode(200)
+  findOneV2(@Param("id") id: number) {
+    return this.carsService.findOneV2(Number(id));
   }
 
   @ApiOperation({ summary: "Altera completamente um carro no banco de dados." })

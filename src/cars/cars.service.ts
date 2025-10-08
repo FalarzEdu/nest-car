@@ -36,6 +36,25 @@ export class CarsService {
     });
   }
 
+  async findOneV2(id: number) {
+    const car = await this.prisma.car.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!car) return null;
+
+    return {
+      id: car.id,
+      brand: car.make,
+      model: car.model,
+      year: car.year,
+      colour: car.colour,
+      status: car.status,
+    };
+  }
+
   async findAllAvailable() {
     return this.prisma.car.findMany({
       where: {

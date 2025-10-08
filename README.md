@@ -41,6 +41,11 @@ Subir o banco de dados
 docker compose up
 ```
 
+Execute as migrações (migrations)
+```
+npx prisma migrate deploy
+```
+
 Executar o projeto em modo de desenvolvimento
 ```
 npm run start:dev
